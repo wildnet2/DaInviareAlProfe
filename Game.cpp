@@ -1,3 +1,98 @@
+/*
+ * game.cpp
+ *
+ *  Created on: 25/mar/2015
+ *      Author: studente
+ */
+#include "Character.h"
+#include "Weapon.h"
+#include"Sword.h"
+#include <iostream>
+#include"Knight.h"
+#include"Bow.h"
+#include"Monster.h"
+#include "Tile.h"
+#include"GameMap.h"
+#include"Wizard.h"
+#include"connectionmanager.h"
+#include"ServerUnreachable.h"
+#include"ServerFull.h"
+int main() {
+
+std::string serverName="dandd.game.com";
+ConnectionManager cm(serverName);
+try{
+	cm.open();
+	}catch(ServerFull & e){
+
+	}
+
+	GameMap* map1=new GameMap(2,2);
+	Tile t1(1,true);
+	Tile t2(2,false);
+	Tile t3(1,true);
+	Tile t4(1,true);
+
+	map1->setTile(0, 0, t1);
+	map1->setTile(0, 1, t2);
+	map1->setTile(1, 0, t3);
+	map1->setTile(1, 1, t4);
+
+
+	GameMap map2(*map1);
+
+	delete map1;
+	map2.printMap();
+
+	std::cout << "Monsters: " << Character::getNumMonsters() << std::endl;
+
+	Weapon* sword = new Bow(12, 8);
+	Character* hero = new Knight("Aragorn", 4);
+	hero->setWeapon(sword);
+
+
+
+	std::cout << hero << std::endl;
+
+	Weapon* spear = new Sword(4);
+	Monster orc(25, 2);
+	orc.setWeapon(spear);
+
+	std::cout << "Monsters: " << Character::getNumMonsters() << std::endl;
+
+	int damage = hero->fight(orc);
+	if (damage)
+		std::cout << hero->getName() << " hits the orc - damage " << damage
+				<< " hit points" << std::endl;
+
+	Weapon* magicSword = new Sword(12, true, true);
+	hero->setWeapon(magicSword);
+	damage = hero->fight(orc);
+	if (damage)
+		std::cout << hero->getName() << " hits the orc - damage " << damage
+				<< " hit points" << std::endl;
+
+	// ...........
+
+	delete sword;
+	delete spear;
+	delete magicSword;
+
+	// ..........
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #include "utilities.h"
 #include <time.h>
