@@ -3,61 +3,6 @@
 #include <time.h>
 
 
-// Game states
-const int STATE_INIT = 0;
-const int STATE_START_SCREEN = 1;
-const int STATE_CHARACTER_SELECTION = 2;
-const int STATE_MAIN_GAME = 3;
-const int STATE_GAME_EXIT = 4;
-const int STATE_GAME_OVER = 99;
-
-int state = STATE_INIT;
-
-bool isDone = false;
-
-
-
-void stateTransition()
-{
-	clearScreen();
-	switch(state)
-	{
-		case STATE_INIT:
-			if(startScreen == NULL)
-			{
-				startScreen = new StartScreen(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
-				startScreen->setSignal(&isDone);
-			}
-			state = STATE_START_SCREEN;
-			break;
-		case STATE_START_SCREEN:
-			startScreen->~StartScreen();
-			startScreen = NULL;
-			//Mix_CloseAudio();		// hangs for no apparent reason
-			if(selectionScreen == NULL)
-			{
-				selectionScreen = new SelectionScreen(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
-				selectionScreen->setSignal(&isDone);
-				selectionScreen->init();
-			}
-			state = STATE_CHARACTER_SELECTION;
-			break;
-		case STATE_CHARACTER_SELECTION:
-			selectionScreen->~SelectionScreen();
-			selectionScreen = NULL;
-			if(mainGame == NULL)
-			{
-				mainGame = new MainGame(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
-				mainGame->setSignal(&isDone);
-				mainGame->init();
-			}
-			state = STATE_MAIN_GAME;
-			break;
-		case STATE_MAIN_GAME:
-			state = STATE_GAME_EXIT;
-			break;
-	}
-}
 
 int main( int argc, char *args[] )
 {
